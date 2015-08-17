@@ -135,7 +135,7 @@ void initBricks(GWindow window)
     // TODO
     for (int i = 0; i < COLS; i++)
     {
-        GRect pink = newGRect(((WIDTH-60)/COLS) * i + 30, 100, (WIDTH-60)/COLS, 15);
+        GRect pink = newGRect(((WIDTH-60)/COLS) * i + 30, 125, (WIDTH-60)/COLS, 15);
         setFilled(pink, true);
         setColor(pink, "PINK");
         add(window, pink);
@@ -143,7 +143,7 @@ void initBricks(GWindow window)
     
     for (int i = 0; i < COLS; i++)
     {
-        GRect magenta = newGRect(((WIDTH-60)/COLS) * i + 30, 115, (WIDTH-60)/COLS, 15);
+        GRect magenta = newGRect(((WIDTH-60)/COLS) * i + 30, 140, (WIDTH-60)/COLS, 15);
         setFilled(magenta, true);
         setColor(magenta, "MAGENTA");
         add(window, magenta);
@@ -151,7 +151,7 @@ void initBricks(GWindow window)
     
     for (int i = 0; i < COLS; i++)
     {
-        GRect orange = newGRect(((WIDTH-60)/COLS) * i + 30, 130, (WIDTH-60)/COLS, 15);
+        GRect orange = newGRect(((WIDTH-60)/COLS) * i + 30, 155, (WIDTH-60)/COLS, 15);
         setFilled(orange, true);
         setColor(orange, "ORANGE");
         add(window, orange);
@@ -159,7 +159,7 @@ void initBricks(GWindow window)
     
     for (int i = 0; i < COLS; i++)
     {
-        GRect yellow = newGRect(((WIDTH-60)/COLS) * i + 30, 145, (WIDTH-60)/COLS, 15);
+        GRect yellow = newGRect(((WIDTH-60)/COLS) * i + 30, 170, (WIDTH-60)/COLS, 15);
         setFilled(yellow, true);
         setColor(yellow, "YELLOW");
         add(window, yellow);
@@ -167,7 +167,7 @@ void initBricks(GWindow window)
     
     for (int i = 0; i < COLS; i++)
     {
-        GRect green = newGRect(((WIDTH-60)/COLS) * i + 30, 160, (WIDTH-60)/COLS, 15);
+        GRect green = newGRect(((WIDTH-60)/COLS) * i + 30, 185, (WIDTH-60)/COLS, 15);
         setFilled(green, true);
         setColor(green, "GREEN");
         add(window, green);
@@ -175,7 +175,7 @@ void initBricks(GWindow window)
     
     for (int i = 0; i < COLS; i++)
     {
-        GRect cyan = newGRect(((WIDTH-60)/COLS) * i + 30, 175, (WIDTH-60)/COLS, 15);
+        GRect cyan = newGRect(((WIDTH-60)/COLS) * i + 30, 200, (WIDTH-60)/COLS, 15);
         setFilled(cyan, true);
         setColor(cyan, "CYAN");
         add(window, cyan);
@@ -188,7 +188,11 @@ void initBricks(GWindow window)
 GOval initBall(GWindow window)
 {
     // TODO
-    return NULL;
+    GOval ball = newGOval(WIDTH/2 - 5, HEIGHT/2 - 5 + 40, 10, 10);
+    setColor(ball, "LIGHT_GRAY");
+    setFilled(ball, true);
+    add(window, ball);
+    return ball;
 }
 
 /**

@@ -18,8 +18,12 @@
 #include <spl/gwindow.h>
 
 // height and width of game's window in pixels
-#define HEIGHT 600
-#define WIDTH 400
+#define HEIGHT 500
+#define WIDTH 600
+
+// height and width of paddle
+#define PHEIGHT 10
+#define PWIDTH 60
 
 // number of rows of bricks
 #define ROWS 5
@@ -74,6 +78,21 @@ int main(void)
     while (lives > 0 && bricks > 0)
     {
         // TODO
+        // check for mouse event
+        GEvent event = getNextEvent(MOUSE_EVENT);
+
+        // if we heard one
+        if (event != NULL)
+        {
+            // if the event was mouse movement
+            if (getEventType(event) == MOUSE_MOVED)
+            {
+                // ensure paddle follows cursor horizontally
+                double x = getX(event) - PWIDTH / 2;
+                double y = getY(paddle);
+                setLocation(paddle, x, y);
+            }
+        }
     }
 
     // wait for click before exiting
@@ -107,7 +126,12 @@ GOval initBall(GWindow window)
 GRect initPaddle(GWindow window)
 {
     // TODO
-    return NULL;
+    GRect paddle = newGRect((WIDTH-PWIDTH)/2, HEIGHT-(PHEIGHT*2), PWIDTH, PHEIGHT);
+    setFilled(paddle, true);
+    setColor(paddle, "PINK");
+    add(window, paddle);
+    
+    return paddle;
 }
 
 /**

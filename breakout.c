@@ -18,7 +18,7 @@
 #include <spl/gwindow.h>
 
 // height and width of game's window in pixels
-#define HEIGHT 500
+#define HEIGHT 525
 #define WIDTH 600
 
 // height and width of paddle
@@ -26,10 +26,10 @@
 #define PWIDTH 60
 
 // number of rows of bricks
-#define ROWS 5
+#define ROWS 6
 
 // number of columns of bricks
-#define COLS 10
+#define COLS 15
 
 // radius of ball in pixels
 #define RADIUS 10
@@ -52,6 +52,12 @@ int main(void)
 
     // instantiate window
     GWindow window = newGWindow(WIDTH, HEIGHT);
+    
+    // set background to dark gray
+    GRect background = newGRect(0, 0, WIDTH, HEIGHT);
+    setFilled(background, true);
+    setColor(background, "DARK_GRAY");
+    add(window, background);
 
     // instantiate bricks
     initBricks(window);
@@ -109,6 +115,53 @@ int main(void)
 void initBricks(GWindow window)
 {
     // TODO
+    for (int i = 0; i < COLS; i++)
+    {
+        GRect pink = newGRect((WIDTH/COLS) * i, 100, WIDTH/COLS, 15);
+        setFilled(pink, true);
+        setColor(pink, "PINK");
+        add(window, pink);
+    }
+    
+    for (int i = 0; i < COLS; i++)
+    {
+        GRect magenta = newGRect((WIDTH/COLS) * i, 115, WIDTH/COLS, 15);
+        setFilled(magenta, true);
+        setColor(magenta, "MAGENTA");
+        add(window, magenta);
+    }
+    
+    for (int i = 0; i < COLS; i++)
+    {
+        GRect orange = newGRect((WIDTH/COLS) * i, 130, WIDTH/COLS, 15);
+        setFilled(orange, true);
+        setColor(orange, "ORANGE");
+        add(window, orange);
+    }
+    
+    for (int i = 0; i < COLS; i++)
+    {
+        GRect yellow = newGRect((WIDTH/COLS) * i, 145, WIDTH/COLS, 15);
+        setFilled(yellow, true);
+        setColor(yellow, "YELLOW");
+        add(window, yellow);
+    }
+    
+    for (int i = 0; i < COLS; i++)
+    {
+        GRect green = newGRect((WIDTH/COLS) * i, 160, WIDTH/COLS, 15);
+        setFilled(green, true);
+        setColor(green, "GREEN");
+        add(window, green);
+    }
+    
+    for (int i = 0; i < COLS; i++)
+    {
+        GRect cyan = newGRect((WIDTH/COLS) * i, 175, WIDTH/COLS, 15);
+        setFilled(cyan, true);
+        setColor(cyan, "CYAN");
+        add(window, cyan);
+    }
 }
 
 /**

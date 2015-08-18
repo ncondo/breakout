@@ -1,10 +1,3 @@
-//
-// breakout.c
-//
-// Computer Science 50
-// Problem Set 3
-//
-
 // standard libraries
 #define _XOPEN_SOURCE
 #include <stdio.h>
@@ -21,6 +14,13 @@
 #define HEIGHT 525
 #define WIDTH 600
 
+// height and width of game's playing area
+#define PLAYHEIGHT 455
+#define PLAYWIDTH 540
+
+// width of border
+#define BORDER 30
+
 // height and width of paddle
 #define PHEIGHT 10
 #define PWIDTH 60
@@ -32,7 +32,7 @@
 #define COLS 15
 
 // radius of ball in pixels
-#define RADIUS 10
+#define RADIUS 5
 
 // lives
 #define LIVES 3
@@ -78,13 +78,13 @@ int main(void)
     add(window, top_border);
     
     // set left border
-    GRect left_border = newGRect(0, 40, 30, HEIGHT);
+    GRect left_border = newGRect(0, 40, 30, HEIGHT-40);
     setFilled(left_border, true);
     setColor(left_border, "LIGHT_GRAY");
     add(window, left_border);
     
     // set right border
-    GRect right_border = newGRect(WIDTH-30, 40, 30, HEIGHT);
+    GRect right_border = newGRect(WIDTH-30, 40, 30, HEIGHT-40);
     setFilled(right_border, true);
     setColor(right_border, "LIGHT_GRAY");
     add(window, right_border);
@@ -97,6 +97,10 @@ int main(void)
 
     // number of points initially
     int points = 0;
+    
+    // initial velocity of ball
+    double velocityX = 2.0;
+    double velocityY = 2.0;
 
     // keep playing until game over
     while (lives > 0 && bricks > 0)
@@ -117,6 +121,44 @@ int main(void)
                 setLocation(paddle, x, y);
             }
         }
+        
+        // create initial ball movement
+        move(ball, velocityX, -velocityY);
+        
+        // detect if the ball has collided with paddle or brick
+        GObject object = detectCollision(window, ball);
+        
+        // bounce off paddle
+        if (object == paddle)
+        {
+            velocityY = drand48() + 2;
+        }
+        // bounce off right wall
+        else if (getX(ball) + 2*RADIUS >= WIDTH - BORDER)
+        {
+            velocityX = -(drand48() + 2);
+            //velocityY = velocityY;
+        }
+        // bounce off left wall
+        else if (getX(ball) <= BORDER)
+        {
+            velocityX = drand48() + 2;
+            //velocityY = velocityY;
+        }
+        // bounce off ceiling
+        else if (getY(ball) <= BORDER + 40)
+        {
+            //velocityX = velocityX;
+            velocityY = -(drand48() + 2);
+        }
+        // bounce off bottom (for testing only)
+        else if (getY(ball) >= HEIGHT)
+        {
+            velocityY = drand48() + 2;
+        }
+        
+        
+        pause(10);
     }
 
     // wait for click before exiting
@@ -132,53 +174,53 @@ int main(void)
  */
 void initBricks(GWindow window)
 {
-    // TODO
+    
     for (int i = 0; i < COLS; i++)
     {
-        GRect pink = newGRect(((WIDTH-60)/COLS) * i + 30, 125, (WIDTH-60)/COLS, 15);
-        setFilled(pink, true);
-        setColor(pink, "PINK");
-        add(window, pink);
+        GRect brick = newGRect(((WIDTH-60)/COLS) * i + 30, 125, (WIDTH-60)/COLS, 15);
+        setFilled(brick, true);
+        setColor(brick, "PINK");
+        add(window, brick);
     }
     
     for (int i = 0; i < COLS; i++)
     {
-        GRect magenta = newGRect(((WIDTH-60)/COLS) * i + 30, 140, (WIDTH-60)/COLS, 15);
-        setFilled(magenta, true);
-        setColor(magenta, "MAGENTA");
-        add(window, magenta);
+        GRect brick = newGRect(((WIDTH-60)/COLS) * i + 30, 140, (WIDTH-60)/COLS, 15);
+        setFilled(brick, true);
+        setColor(brick, "MAGENTA");
+        add(window, brick);
     }
     
     for (int i = 0; i < COLS; i++)
     {
-        GRect orange = newGRect(((WIDTH-60)/COLS) * i + 30, 155, (WIDTH-60)/COLS, 15);
-        setFilled(orange, true);
-        setColor(orange, "ORANGE");
-        add(window, orange);
+        GRect brick = newGRect(((WIDTH-60)/COLS) * i + 30, 155, (WIDTH-60)/COLS, 15);
+        setFilled(brick, true);
+        setColor(brick, "ORANGE");
+        add(window, brick);
     }
     
     for (int i = 0; i < COLS; i++)
     {
-        GRect yellow = newGRect(((WIDTH-60)/COLS) * i + 30, 170, (WIDTH-60)/COLS, 15);
-        setFilled(yellow, true);
-        setColor(yellow, "YELLOW");
-        add(window, yellow);
+        GRect brick = newGRect(((WIDTH-60)/COLS) * i + 30, 170, (WIDTH-60)/COLS, 15);
+        setFilled(brick, true);
+        setColor(brick, "YELLOW");
+        add(window, brick);
     }
     
     for (int i = 0; i < COLS; i++)
     {
-        GRect green = newGRect(((WIDTH-60)/COLS) * i + 30, 185, (WIDTH-60)/COLS, 15);
-        setFilled(green, true);
-        setColor(green, "GREEN");
-        add(window, green);
+        GRect brick = newGRect(((WIDTH-60)/COLS) * i + 30, 185, (WIDTH-60)/COLS, 15);
+        setFilled(brick, true);
+        setColor(brick, "GREEN");
+        add(window, brick);
     }
     
     for (int i = 0; i < COLS; i++)
     {
-        GRect cyan = newGRect(((WIDTH-60)/COLS) * i + 30, 200, (WIDTH-60)/COLS, 15);
-        setFilled(cyan, true);
-        setColor(cyan, "CYAN");
-        add(window, cyan);
+        GRect brick = newGRect(((WIDTH-60)/COLS) * i + 30, 200, (WIDTH-60)/COLS, 15);
+        setFilled(brick, true);
+        setColor(brick, "CYAN");
+        add(window, brick);
     }
 }
 
@@ -187,8 +229,7 @@ void initBricks(GWindow window)
  */
 GOval initBall(GWindow window)
 {
-    // TODO
-    GOval ball = newGOval(WIDTH/2 - 5, HEIGHT/2 - 5 + 40, 10, 10);
+    GOval ball = newGOval(WIDTH/2 - RADIUS, HEIGHT/2 - RADIUS + 40, RADIUS*2, RADIUS*2);
     setColor(ball, "LIGHT_GRAY");
     setFilled(ball, true);
     add(window, ball);
@@ -200,7 +241,6 @@ GOval initBall(GWindow window)
  */
 GRect initPaddle(GWindow window)
 {
-    // TODO
     GRect paddle = newGRect((WIDTH-PWIDTH)/2, HEIGHT-(PHEIGHT*2), PWIDTH, PHEIGHT);
     setFilled(paddle, true);
     setColor(paddle, "PINK");

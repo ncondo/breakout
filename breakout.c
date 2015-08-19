@@ -37,6 +37,8 @@
 // lives
 #define LIVES 3
 
+GRect brick;
+
 // prototypes
 void initBricks(GWindow window);
 GOval initBall(GWindow window);
@@ -99,13 +101,18 @@ int main(void)
     int points = 0;
     
     // initial velocity of ball
-    double velocityX = 2.0;
-    double velocityY = 2.0;
+    double velocityX = 3.0;
+    double velocityY = 3.0;
+    
+    // Store the object the ball has collided with
+    GObject collisionObject;
+    
+    // wait for the user to click to start the game
+    waitForClick();
 
     // keep playing until game over
     while (lives > 0 && bricks > 0)
     {
-        // TODO
         // check for mouse event
         GEvent event = getNextEvent(MOUSE_EVENT);
 
@@ -123,40 +130,46 @@ int main(void)
         }
         
         // create initial ball movement
-        move(ball, velocityX, -velocityY);
+        move(ball, velocityX, velocityY);
         
         // detect if the ball has collided with paddle or brick
-        GObject object = detectCollision(window, ball);
+        collisionObject = detectCollision(window, ball);
         
-        // bounce off paddle
-        if (object == paddle)
+        if (collisionObject != NULL && strcmp(getType(collisionObject), "GRect") == 0)
         {
-            velocityY = drand48() + 2;
+            if (collisionObject == paddle)
+            {
+                velocityX = -velocityX;
+                velocityY = -velocityY;
+            }
+            else if (collisionObject != paddle && collisionObject != left_border && collisionObject != right_border && collisionObject != top_border && collisionObject != background)
+            {
+                velocityY = -velocityY;
+                removeGWindow(window, collisionObject);
+                bricks--;
+            }
         }
+        
         // bounce off right wall
-        else if (getX(ball) + 2*RADIUS >= WIDTH - BORDER)
+        if (getX(ball) + 2*RADIUS >= WIDTH - BORDER)
         {
-            velocityX = -(drand48() + 2);
-            //velocityY = velocityY;
+            velocityX = -velocityX;
         }
         // bounce off left wall
         else if (getX(ball) <= BORDER)
         {
-            velocityX = drand48() + 2;
-            //velocityY = velocityY;
+            velocityX = -velocityX;
         }
         // bounce off ceiling
         else if (getY(ball) <= BORDER + 40)
         {
-            //velocityX = velocityX;
-            velocityY = -(drand48() + 2);
+            velocityY = -velocityY;
         }
         // bounce off bottom (for testing only)
         else if (getY(ball) >= HEIGHT)
         {
-            velocityY = drand48() + 2;
+            velocityY = -velocityY;
         }
-        
         
         pause(10);
     }
@@ -174,10 +187,18 @@ int main(void)
  */
 void initBricks(GWindow window)
 {
+
+    /*for (int i = 0; i < ROWS; i++)
+    {
+        for (int j = 0; j < COLS; j++)
+        {
+            
+        }
+    }*/
     
     for (int i = 0; i < COLS; i++)
     {
-        GRect brick = newGRect(((WIDTH-60)/COLS) * i + 30, 125, (WIDTH-60)/COLS, 15);
+        brick = newGRect(((WIDTH-60)/COLS) * i + 30, 125, (WIDTH-60)/COLS, 15);
         setFilled(brick, true);
         setColor(brick, "PINK");
         add(window, brick);
@@ -185,7 +206,7 @@ void initBricks(GWindow window)
     
     for (int i = 0; i < COLS; i++)
     {
-        GRect brick = newGRect(((WIDTH-60)/COLS) * i + 30, 140, (WIDTH-60)/COLS, 15);
+        brick = newGRect(((WIDTH-60)/COLS) * i + 30, 140, (WIDTH-60)/COLS, 15);
         setFilled(brick, true);
         setColor(brick, "MAGENTA");
         add(window, brick);
@@ -193,7 +214,7 @@ void initBricks(GWindow window)
     
     for (int i = 0; i < COLS; i++)
     {
-        GRect brick = newGRect(((WIDTH-60)/COLS) * i + 30, 155, (WIDTH-60)/COLS, 15);
+        brick = newGRect(((WIDTH-60)/COLS) * i + 30, 155, (WIDTH-60)/COLS, 15);
         setFilled(brick, true);
         setColor(brick, "ORANGE");
         add(window, brick);
@@ -201,7 +222,7 @@ void initBricks(GWindow window)
     
     for (int i = 0; i < COLS; i++)
     {
-        GRect brick = newGRect(((WIDTH-60)/COLS) * i + 30, 170, (WIDTH-60)/COLS, 15);
+        brick = newGRect(((WIDTH-60)/COLS) * i + 30, 170, (WIDTH-60)/COLS, 15);
         setFilled(brick, true);
         setColor(brick, "YELLOW");
         add(window, brick);
@@ -209,7 +230,7 @@ void initBricks(GWindow window)
     
     for (int i = 0; i < COLS; i++)
     {
-        GRect brick = newGRect(((WIDTH-60)/COLS) * i + 30, 185, (WIDTH-60)/COLS, 15);
+        brick = newGRect(((WIDTH-60)/COLS) * i + 30, 185, (WIDTH-60)/COLS, 15);
         setFilled(brick, true);
         setColor(brick, "GREEN");
         add(window, brick);
@@ -217,7 +238,7 @@ void initBricks(GWindow window)
     
     for (int i = 0; i < COLS; i++)
     {
-        GRect brick = newGRect(((WIDTH-60)/COLS) * i + 30, 200, (WIDTH-60)/COLS, 15);
+        brick = newGRect(((WIDTH-60)/COLS) * i + 30, 200, (WIDTH-60)/COLS, 15);
         setFilled(brick, true);
         setColor(brick, "CYAN");
         add(window, brick);

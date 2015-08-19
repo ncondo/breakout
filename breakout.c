@@ -42,7 +42,9 @@ void initBricks(GWindow window);
 GOval initBall(GWindow window);
 GRect initPaddle(GWindow window);
 GLabel initScoreboard(GWindow window);
+GLabel initLivesLabel(GWindow window);
 void updateScoreboard(GWindow window, GLabel label, int points);
+void updateLivesLabel(GWindow window, GLabel label, int lives);
 GObject detectCollision(GWindow window, GOval ball);
 
 int main(void)
@@ -69,7 +71,10 @@ int main(void)
     GRect paddle = initPaddle(window);
 
     // instantiate scoreboard
-    GLabel score = initScoreboard(window);
+    GLabel pointsLabel = initScoreboard(window);
+    
+    // instantiate lives label
+    GLabel livesLabel = initLivesLabel(window);
     
     // set top border to light gray
     GRect top_border = newGRect(0, 40, WIDTH, 30);
@@ -98,9 +103,12 @@ int main(void)
     // number of points initially
     int points = 0;
     
+    // seed pseudorandom number generator
+    srand48(time(NULL));
+    
     // initial velocity of ball
-    double velocityX = 3.0;
-    double velocityY = 3.0;
+    double velocityX = drand48() + 2.0;
+    double velocityY = drand48() + 2.0;
     
     // Store the object the ball has collided with
     GObject collisionObject;
@@ -146,7 +154,7 @@ int main(void)
                 removeGWindow(window, collisionObject);
                 bricks--;
                 points++;
-                updateScoreboard(window, score, points);
+                updateScoreboard(window, pointsLabel, points);
             }
         }
         
@@ -169,6 +177,7 @@ int main(void)
         else if (getY(ball) + getHeight(ball) >= HEIGHT)
         {
             lives--;
+            updateLivesLabel(window, livesLabel, lives);
             setLocation(ball, WIDTH/2 - RADIUS, HEIGHT/2 - RADIUS + 40);
             setLocation(paddle, (WIDTH-PWIDTH)/2, HEIGHT-(PHEIGHT*2)); 
             waitForClick();
@@ -237,12 +246,25 @@ GRect initPaddle(GWindow window)
  */
 GLabel initScoreboard(GWindow window)
 {
-    GLabel score = newGLabel("000");
-    setFont(score, "SansSerif-42");
-    setColor(score, "LIGHT_GRAY");
-    setLocation(score, 120, 35);
-    add(window, score);
-    return score;
+    GLabel pointsLabel = newGLabel("000");
+    setFont(pointsLabel, "SansSerif-42");
+    setColor(pointsLabel, "LIGHT_GRAY");
+    setLocation(pointsLabel, 120, 35);
+    add(window, pointsLabel);
+    return pointsLabel;
+}
+
+/**
+ * Instantiates, configures, and returns label for number of lives remaining.
+ */
+GLabel initLivesLabel(GWindow window)
+{
+    GLabel livesLabel = newGLabel("3");
+    setFont(livesLabel, "SansSerif-42");
+    setColor(livesLabel, "LIGHT_GRAY");
+    setLocation(livesLabel, 420, 35);
+    add(window, livesLabel);
+    return livesLabel;
 }
 
 /**
@@ -254,13 +276,17 @@ void updateScoreboard(GWindow window, GLabel label, int points)
     char s[12];
     sprintf(s, "%03i", points);
     setLabel(label, s);
+}
 
-    /*
-    // center label in window
-    double x = (getWidth(window) - getWidth(label)) / 2;
-    double y = (getHeight(window) - getHeight(label)) / 2;
-    setLocation(label, x, y);
-    */
+/**
+ * Updates label to keep track of number of lives remaining
+ */
+void updateLivesLabel(GWindow window, GLabel label, int lives)
+{
+    // update label
+    char s[12];
+    sprintf(s, "%i", lives);
+    setLabel(label, s);
 }
 
 /**

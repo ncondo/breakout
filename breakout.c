@@ -43,6 +43,7 @@ GOval initBall(GWindow window);
 GRect initPaddle(GWindow window);
 GLabel initScoreboard(GWindow window);
 GLabel initLivesLabel(GWindow window);
+void gameOver(GWindow window);
 void updateScoreboard(GWindow window, GLabel label, int points);
 void updateLivesLabel(GWindow window, GLabel label, int lives);
 GObject detectCollision(GWindow window, GOval ball);
@@ -179,12 +180,18 @@ int main(void)
             lives--;
             updateLivesLabel(window, livesLabel, lives);
             setLocation(ball, WIDTH/2 - RADIUS, HEIGHT/2 - RADIUS + 40);
-            setLocation(paddle, (WIDTH-PWIDTH)/2, HEIGHT-(PHEIGHT*2)); 
-            waitForClick();
+            setLocation(paddle, (WIDTH-PWIDTH)/2, HEIGHT-(PHEIGHT*2));
+            if (lives > 0)
+            {
+                waitForClick();
+            } 
         }
         
         pause(10);
     }
+    
+    // display GAME OVER
+    gameOver(window);
 
     // wait for click before exiting
     waitForClick();
@@ -265,6 +272,20 @@ GLabel initLivesLabel(GWindow window)
     setLocation(livesLabel, 420, 35);
     add(window, livesLabel);
     return livesLabel;
+}
+
+/**
+ * Instantiates, configures, and returns label for number of lives remaining.
+ */
+void gameOver(GWindow window)
+{
+    GLabel gameOver = newGLabel("GAME OVER");
+    setFont(gameOver, "SansSerif-42");
+    setColor(gameOver, "RED");
+    double x = (WIDTH - getWidth(gameOver)) / 2;
+    double y = (HEIGHT - getHeight(gameOver) + 70) / 2;
+    setLocation(gameOver, x, y);
+    add(window, gameOver);
 }
 
 /**

@@ -68,8 +68,8 @@ int main(void)
     // instantiate paddle, centered at bottom of window
     GRect paddle = initPaddle(window);
 
-    // instantiate scoreboard, centered in middle of window, just above ball
-    GLabel label = initScoreboard(window);
+    // instantiate scoreboard
+    GLabel score = initScoreboard(window);
     
     // set top border to light gray
     GRect top_border = newGRect(0, 40, WIDTH, 30);
@@ -145,6 +145,8 @@ int main(void)
                 velocityY = -velocityY;
                 removeGWindow(window, collisionObject);
                 bricks--;
+                points++;
+                updateScoreboard(window, score, points);
             }
         }
         
@@ -163,7 +165,7 @@ int main(void)
         {
             velocityY = -velocityY;
         }
-        // bounce off bottom (for testing only)
+        // when user misses ball, reset ball and paddle and take away a life
         else if (getY(ball) + getHeight(ball) >= HEIGHT)
         {
             lives--;
@@ -227,7 +229,6 @@ GRect initPaddle(GWindow window)
     setFilled(paddle, true);
     setColor(paddle, "PINK");
     add(window, paddle);
-    
     return paddle;
 }
 
@@ -236,8 +237,12 @@ GRect initPaddle(GWindow window)
  */
 GLabel initScoreboard(GWindow window)
 {
-    // TODO
-    return NULL;
+    GLabel score = newGLabel("000");
+    setFont(score, "SansSerif-42");
+    setColor(score, "LIGHT_GRAY");
+    setLocation(score, 120, 35);
+    add(window, score);
+    return score;
 }
 
 /**
@@ -247,13 +252,15 @@ void updateScoreboard(GWindow window, GLabel label, int points)
 {
     // update label
     char s[12];
-    sprintf(s, "%i", points);
+    sprintf(s, "%03i", points);
     setLabel(label, s);
 
+    /*
     // center label in window
     double x = (getWidth(window) - getWidth(label)) / 2;
     double y = (getHeight(window) - getHeight(label)) / 2;
     setLocation(label, x, y);
+    */
 }
 
 /**

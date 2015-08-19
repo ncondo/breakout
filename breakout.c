@@ -37,8 +37,6 @@
 // lives
 #define LIVES 3
 
-GRect brick;
-
 // prototypes
 void initBricks(GWindow window);
 GOval initBall(GWindow window);
@@ -166,9 +164,12 @@ int main(void)
             velocityY = -velocityY;
         }
         // bounce off bottom (for testing only)
-        else if (getY(ball) >= HEIGHT)
+        else if (getY(ball) + getHeight(ball) >= HEIGHT)
         {
-            velocityY = -velocityY;
+            lives--;
+            setLocation(ball, WIDTH/2 - RADIUS, HEIGHT/2 - RADIUS + 40);
+            setLocation(paddle, (WIDTH-PWIDTH)/2, HEIGHT-(PHEIGHT*2)); 
+            waitForClick();
         }
         
         pause(10);
@@ -187,61 +188,21 @@ int main(void)
  */
 void initBricks(GWindow window)
 {
-
-    /*for (int i = 0; i < ROWS; i++)
+    string brickColors[] = { "PINK", "MAGENTA", "ORANGE", "YELLOW", "GREEN", "CYAN" };
+    int colorIndex = 0;
+    int brickLevel = 125;
+    
+    for (int i = 0; i < ROWS; i++)
     {
         for (int j = 0; j < COLS; j++)
         {
-            
+           GRect brick = newGRect(((WIDTH-60)/COLS) * j + 30, brickLevel, (WIDTH-60)/COLS, 15);
+           setFilled(brick, true);
+           setColor(brick, brickColors[colorIndex]);
+           add(window, brick); 
         }
-    }*/
-    
-    for (int i = 0; i < COLS; i++)
-    {
-        brick = newGRect(((WIDTH-60)/COLS) * i + 30, 125, (WIDTH-60)/COLS, 15);
-        setFilled(brick, true);
-        setColor(brick, "PINK");
-        add(window, brick);
-    }
-    
-    for (int i = 0; i < COLS; i++)
-    {
-        brick = newGRect(((WIDTH-60)/COLS) * i + 30, 140, (WIDTH-60)/COLS, 15);
-        setFilled(brick, true);
-        setColor(brick, "MAGENTA");
-        add(window, brick);
-    }
-    
-    for (int i = 0; i < COLS; i++)
-    {
-        brick = newGRect(((WIDTH-60)/COLS) * i + 30, 155, (WIDTH-60)/COLS, 15);
-        setFilled(brick, true);
-        setColor(brick, "ORANGE");
-        add(window, brick);
-    }
-    
-    for (int i = 0; i < COLS; i++)
-    {
-        brick = newGRect(((WIDTH-60)/COLS) * i + 30, 170, (WIDTH-60)/COLS, 15);
-        setFilled(brick, true);
-        setColor(brick, "YELLOW");
-        add(window, brick);
-    }
-    
-    for (int i = 0; i < COLS; i++)
-    {
-        brick = newGRect(((WIDTH-60)/COLS) * i + 30, 185, (WIDTH-60)/COLS, 15);
-        setFilled(brick, true);
-        setColor(brick, "GREEN");
-        add(window, brick);
-    }
-    
-    for (int i = 0; i < COLS; i++)
-    {
-        brick = newGRect(((WIDTH-60)/COLS) * i + 30, 200, (WIDTH-60)/COLS, 15);
-        setFilled(brick, true);
-        setColor(brick, "CYAN");
-        add(window, brick);
+        colorIndex++;
+        brickLevel += 15;
     }
 }
 
